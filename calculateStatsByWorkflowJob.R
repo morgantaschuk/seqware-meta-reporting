@@ -6,28 +6,33 @@ processing_wg<-args[1]
 processing_ex<-args[2]
 processing_ts<-args[3]
 
+#http://stackoverflow.com/questions/1962278/dealing-with-timestamps-in-r
+sixmonths=seq(Sys.time(), length = 2, by = "-6 months")[2]
 
 wg<-read.csv(processing_wg, header=TRUE)
 wg_nopf <- subset(wg, algorithm!='ProvisionFiles')
 wg_nopf <- subset(wg_nopf, algorithm!='createdirs')
+wg_nopf <- subset(wg_nopf, as.POSIXlt(create_tstmp)>sixmonths)
 
 ex<-read.csv(processing_ex, header=TRUE)
 ex_nopf <- subset(ex, algorithm!='ProvisionFiles')
 ex_nopf <- subset(ex_nopf, algorithm!='createdirs')
+ex_nopf <- subset(ex_nopf, as.POSIXlt(create_tstmp)>sixmonths)
 
 
 ts<-read.csv(processing_ts, header=TRUE)
 ts_nopf <- subset(ts, algorithm!='ProvisionFiles')
 ts_nopf <- subset(ts_nopf, algorithm!='createdirs')
+ts_nopf <- subset(ts_nopf, as.POSIXlt(create_tstmp)>sixmonths)
 
 
 ###HISTOGRAMS
 pdf("histogram-by-workflow.pdf")
-for (wf in levels(wg_nopf$name)) {
+for (wf in levels(droplevels(wg_nopf$name))) {
 	newwg <- subset(wg_nopf, name==wf)
 	newex<-subset(ex_nopf, name==wf)
 	newts<-subset(ts_nopf, name==wf)
-	mymax<-max(max(newwg$create_update), max(newex$create_update), max(newts$create_update, -Inf))/3600
+	mymax<-max(max(newwg$create_update,-Inf), max(newex$create_update, -Inf), max(newts$create_update, -Inf))/3600
 	bs<-c(seq(0,30,1), mymax)
 	wgh<-hist(newwg$create_update/3600, plot=F, breaks=bs)
 	plot(wgh, col=rgb(0,0,1,1/4), xlab='Job runtime (h)', main=paste('Histogram of',wf,'job runtimes(h)', sep=' '), freq=FALSE, xlim=range(0, min(mymax, 30)))
