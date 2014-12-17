@@ -51,7 +51,7 @@ dev.off()
 
 pdf("boxplots-by-workflow-max.pdf")
 #take all the matrices and bind them together in a massive array
-result<-do.call(rbind, lapply(levels(wg_nopf$name), function(wf) {
+result<-do.call(rbind, lapply(levels(droplevels(wg_nopf$name)), function(wf) {
 	#pull out the workflow of interest
 	data<-subset(wg_nopf, name==wf)
 
