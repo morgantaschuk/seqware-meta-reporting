@@ -21,7 +21,7 @@ R
 Usage
 -----
 
-h3. Data files
+### Data files
 First, run the SQL script dumpProcessingStats.sql in order to generate csv files with the relevant information.
 
     psql -f dumpProcessingStats.sql -h seqwaremetabb.host seqware_meta_db
@@ -37,7 +37,7 @@ The CSV file format has a header with the following columns: name,algorithm,crea
 * stop_start - the different between run_stop_time and run_start_time. This corresponds to the amount of time the wrapped command took to run inside the SeqWare system. The difference between create_update and stop_start is the amount of overhead SeqWare adds per job.
 * worklflow_run_id - the unique ID of the workflow run that owns the job
 
-h3. Statistics and graphs
+### Statistics and graphs
 
 Once you have these files, you can run the R script to calculate summary statistics and produce several graphs. The first argument is the number of months in the past for which the information should be calculates (e.g. "6" would calculate from 6 months ago to the present time). The second argument is the file that should be used to produce the statistics. In this example we use the whole genome file (processing_wg.csv), but you can also calculate over all jobs, exome jobs and targeted sequencing jobs.
 
