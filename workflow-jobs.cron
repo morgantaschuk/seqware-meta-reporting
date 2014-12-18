@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#dump several CSV files to the local directory: processing_all.csv, processing_wg.csv, processing_ex.csv, processing_ts.csv
+psql -h db.oicr.on.ca -U seqware -f dumpProcessingStats.sql seqware_meta_db
+
+#calculate the stats using the WG file for the last 6 months
+Rscript calculateStatsByWorkflowJob.R 6 processing_wg.csv 
+
